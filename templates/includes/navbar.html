@@ -58,13 +58,23 @@
 
 	<div class="col-lg-3 col-sm-6 col-8">
 		<div class="d-flex justify-content-end">
+			{% if user.id is None %}
 			<div class="widget-header">
 				<small class="title text-muted">Welcome guest!</small>
 				<div>
-					<a href="/signin">Sign in</a> | 
-					<a href="/register">Register</a>
+					<a href="{% url 'login' %}">Sign in</a> | 
+					<a href="{% url 'register' %}">Register</a>
 				</div>
 			</div>
+			{% else %}
+			  <div class="widget-header">
+				  <small class="title text-muted">Welcome {{user.first_name}}!</small>
+				  <div>
+					  <a href="{% url 'dashboard' %}">Dashboard</a> | 
+					  <a href="{% url 'logout' %}">Logout</a>
+				  </div>
+			  </div>
+		 {% endif%}
 			<a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
 				<div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
 				<span class="badge badge-pill badge-danger notify">{{cart_count}}</span>

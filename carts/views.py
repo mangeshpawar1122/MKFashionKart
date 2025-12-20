@@ -30,12 +30,12 @@ def add_cart(request,product_id):
       except :
         pass
        
+      try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))  # get cart using session cart_id
+      except Cart.DoesNotExist:
+        cart = Cart.objects.create(cart_id=_cart_id(request))
+        cart.save()
 
-  try:
-    cart=Cart.objects.get(cart_id=_cart_id(request))  # get the cart using the cart_id present in the session
-  except Cart.DoesNotExist:
-    cart=Cart.objects.create(cart_id=_cart_id(request))
-    cart.save()
 
 
   is_cart_item_exists=CartItem.objects.filter(product=product,cart=cart).exists()  
