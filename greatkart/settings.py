@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'category',
     'store',
     'carts',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Password validation
@@ -146,9 +148,10 @@ MESSAGE_TAGS = {
 
 
 
-# SMTP Configuration
+## SMTP Configuration
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'kajalpawarpawar806@gmail.com'
-EMAIL_HOST_PASSWORD = 'YOUR_APP_PASSWORD_HERE'
+EMAIL_HOST_USER = 'pawarmangesh112203@gmail.com'
+EMAIL_HOST_PASSWORD = 'Mangesh@1122'
 EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

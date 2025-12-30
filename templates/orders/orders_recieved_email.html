@@ -1,0 +1,6 @@
+{% autoescape off %}
+Hi {{ user.first_name }},
+Your order has been received successfully!
+Order Number: {{ order.order_number }}
+Total Amount: ${{ order.total }}
+{% endautoescape %}

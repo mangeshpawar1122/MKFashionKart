@@ -18,42 +18,55 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 import requests
 
+
 def register(request):
-  if request.method == 'POST':
-    form=RegistrationForms(request.POST)
-    if form.is_valid():
-      first_name=form.cleaned_data['first_name']
-      last_name=form.cleaned_data['last_name']
-      phone_number=form.cleaned_data['phone_number']
-      email=form.cleaned_data['email']
-      password=form.cleaned_data['password']
-      username=email.split("@")[0]
-      user=Account.objects.create_user(first_name=first_name,last_name=last_name,email=email,username=username,password=password)
-      user.phone_number=phone_number
-      user.save()
+    if request.user.is_authenticated:
+        return redirect('dashboard')
 
-      # USER ACTIVATION
-      current_site = get_current_site(request)
-      mail_subject = 'Please activate your account...'
-      messages=render_to_string('accounts/account_verification_email.html', {
-        'user':user,
-        'domain':current_site,
-        'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-        'token':default_token_generator.make_token(user),
-      })
-      to_email=email
-      send_email=EmailMessage(mail_subject,messages,to=[to_email])
-      send_email.send()
-      
+    if request.method == 'POST':
+        form = RegistrationForms(request.POST)
 
-      #messages.success(request,'Thank tou for your Registration with as. we have sent you a varification email to your email address. please verify it ')
-      return redirect('/accounts/login/?command=varification&email='+email)
-  else :
-    form=RegistrationForms()
-  context={
-    'form':form
-  }
-  return render(request,'accounts/register.html',context)
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            phone_number = form.cleaned_data['phone_number']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            user = Account.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=password
+            )
+            user.phone_number = phone_number
+            user.save()
+
+            # USER ACTIVATION EMAIL
+            current_site = get_current_site(request)
+            mail_subject = 'Please activate your account...'
+
+            email_body = render_to_string(
+                'accounts/account_verification_email.html',
+                {
+                    'user': user,
+                    'domain': current_site,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': default_token_generator.make_token(user),
+                }
+            )
+
+            try:
+                send_email = EmailMessage(mail_subject, email_body, to=[email])
+                send_email.send()
+            except Exception as e:
+                print("EMAIL ERROR:", e)
+
+            return redirect('/accounts/login/?command=verification&email=' + email)
+    else:
+        form = RegistrationForms()
+
+    return render(request, 'accounts/register.html', {'form': form})
 
 
 def login(request):
