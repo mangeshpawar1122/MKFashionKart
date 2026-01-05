@@ -22,7 +22,7 @@ def store(request,category_slug=None):
     is_available=True   # ✅ correct
     ).order_by('id')
     
-    paginator=Paginator(products,1)
+    paginator=Paginator(products,5)
     page=request.GET.get('page')   # this is a paginator part
     paged_products=paginator.get_page(page)
     product_count=products.count()
