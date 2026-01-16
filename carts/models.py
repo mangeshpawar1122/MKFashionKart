@@ -25,4 +25,25 @@ class CartItem(models.Model):
   def __str__(self):
     return self.product.product_name
   
-  
+  from django.db import models
+from django.utils import timezone
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount = models.PositiveIntegerField(help_text="Discount in percentage")
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    active = models.BooleanField(default=True)
+    used = models.BooleanField(default=False)  # 🔐 one-time use
+
+    def is_valid(self):
+        now = timezone.now()
+        return (
+            self.active and
+            not self.used and
+            self.valid_from <= now <= self.valid_to
+        )
+
+    def __str__(self):
+        return self.code
+

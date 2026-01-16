@@ -4,6 +4,10 @@ from .models import Cart,CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from django.contrib import messages
+from .models import Coupon
+
 # Create your views here.
 def _cart_id(request):
   cart=request.session.session_key
@@ -111,7 +115,7 @@ def add_cart(request,product_id):
 
     print(ex_var_list)
     if product_variation in ex_var_list:
-     #increase the cart item quantity
+     # increase the cart item quantity
      index= ex_var_list.index(product_variation)
      item_id=id[index]
      item = CartItem.objects.filter(id=item_id, product=product).first()
@@ -120,7 +124,7 @@ def add_cart(request,product_id):
 
     else:
       item=CartItem.objects.create(product=product, quantity=1,cart=cart)
-      #create a new cart
+      # create a new cart
       if len(product_variation) > 0:
         item.variations.clear()
         item.variations.add(*product_variation)
@@ -187,6 +191,21 @@ def cart(request, total=0, quantity=0, cart_items=None):
         grand_total = total + tax    
     except ObjectDoesNotExist:
        pass # just ignore
+    
+     # 🔥 COUPON LOGIC START
+    coupon_id = request.session.get('coupon_id')
+    discount = 0
+
+    if coupon_id:
+        try:
+            coupon = Coupon.objects.get(id=coupon_id)
+            if coupon.is_valid():
+                discount = (coupon.discount / 100) * total
+                grand_total -= discount
+        except Coupon.DoesNotExist:
+            pass
+    # 🔥 COUPON LOGIC END
+
     context = {
         'total': total,
         'quantity': quantity,
@@ -197,6 +216,50 @@ def cart(request, total=0, quantity=0, cart_items=None):
     return render(request, 'store/cart.html', context)
 
 
+def cart(request, total=0, quantity=0, cart_items=None):
+    try:
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+        else:
+            cart = Cart.objects.get(cart_id=_cart_id(request))
+            cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+
+        total = 0
+        quantity = 0
+
+        for item in cart_items:
+            total += item.product.price * item.quantity
+            quantity += item.quantity
+
+    except ObjectDoesNotExist:
+        cart_items = []
+
+    discount = 0
+    coupon_id = request.session.get('coupon_id')
+
+    if coupon_id:
+        try:
+            coupon = Coupon.objects.get(id=coupon_id)
+            if coupon.is_valid():
+                discount = (coupon.discount / 100) * total
+            else:
+                request.session.pop('coupon_id', None)
+        except Coupon.DoesNotExist:
+            request.session.pop('coupon_id', None)
+
+    discounted_total = total - discount
+    tax = (2 * discounted_total) / 100
+    grand_total = discounted_total + tax
+
+    context = {
+        'total': total,
+        'discount': discount,
+        'tax': tax,
+        'grand_total': grand_total,
+        'cart_items': cart_items,
+    }
+
+    return render(request, 'store/cart.html', context)
 
 @login_required(login_url='login')
 # this is a checkout 
@@ -217,6 +280,7 @@ def checkout(request,  total=0, quantity=0, cart_items=None):
         grand_total = total + tax    
   except Cart.ObjectDoesNotExist:
     pass # just ignore
+
   context = {
     'total': total,
     'quantity': quantity,
@@ -226,3 +290,31 @@ def checkout(request,  total=0, quantity=0, cart_items=None):
   }
    
   return render(request, 'store/checkout.html',context)
+
+
+def apply_coupon(request):
+    if request.method == "POST":
+        code = request.POST.get("coupon_code", "").strip()
+
+        #  last  coupon remove 
+        request.session.pop('coupon_id', None)
+
+        try:
+            coupon = Coupon.objects.get(code__iexact=code)
+
+            if not coupon.is_valid():
+                messages.error(
+                    request,
+                    "This  coupon is invalid and expired and used."
+                )
+            else:
+                request.session['coupon_id'] = coupon.id
+                messages.success(
+                    request,
+                    f"Coupon is apply  {coupon.discount}% discount is valid 🎉"
+                )
+
+        except Coupon.DoesNotExist:
+            messages.error(request, "Wrong coupon code ❌")
+
+    return redirect('cart')

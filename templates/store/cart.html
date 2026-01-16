@@ -94,6 +94,7 @@
 
 	</aside> <!-- col.// -->
 	<aside class="col-lg-3">
+		
 
 		<div class="card">
 		<div class="card-body">
@@ -113,18 +114,44 @@
 			<p class="text-center mb-3">
 				<img src="{% static './images/misc/payments.png' %}" height="26">
 			</p>
+			
 			<a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
 			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
-		</div> <!-- card-body.// -->
+			<!-- ============================ COMPONENT 1 END .// ================================= -->
+<div class="coupon-card">
+  <h4>Apply Coupon</h4>
+
+  <form method="POST" action="{% url 'apply_coupon' %}">
+    {% csrf_token %}
+    <input
+      type="text"
+      name="coupon_code"
+      placeholder="Enter coupon code"
+      required
+    >
+    <button type="submit">Apply</button>
+  </form>
+</div>
+
+<!-- Messages -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
 		</div> <!-- card.// -->
+		
+		</div> <!-- card-body.// -->
+		
 
 </aside> <!-- col.// -->
 
 
 </div> <!-- row.// -->
-<!-- ============================ COMPONENT 1 END .// ================================= -->
+
 {% endif %}
-</div> <!-- container .//  -->
-</section>
+
 <!-- ========================= SECTION CONTENT END// ========================= -->
 {% endblock  %}

@@ -1,0 +1,112 @@
+/* Hide radio buttons */
+.rate > input {
+  display: none;
+}
+
+.rate {
+  display: inline-block;
+  border: 0;
+}
+
+.rate > label { float: right; }
+
+
+
+
+/*showing the star color on hover*/
+.rate > label:before {
+  display: inline-block;
+  font-size: 1.1rem;
+  content: "\f005";
+  font-family: FontAwesome;
+  margin: 0;
+  padding: 0.3rem .2rem;
+  cursor: pointer;
+}
+
+/* HALF STAR */
+.rate > .half:before {
+  content: "\f089";
+  position: absolute;
+  padding-right: 0;
+}
+
+/* Clicked star color */
+input:checked ~ label,label:hover ~ label{
+  color: #ffc107;
+}
+
+/* hover hilight */
+input:checked + label:hover,
+input:checked ~ label:hover,
+input:checked ~ label:hover ~ label
+label:hover ~ input:checked ~ label{
+  color: #cc9000;
+}
+
+.rating-stars i {
+    color: #ffc107;
+
+}
+
+ul.thumb {
+    margin: 0 auto;
+    padding: 0;
+    gap: 10px;
+    float: left;
+}
+
+ul.thumb li {
+    list-style: none;
+    margin: 10px;
+}
+
+ul.thumb li img {
+    width: 80px;
+    height: 80px;
+    border: 1px solid gray;
+   
+}
+
+.similar-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 15px;
+  padding-bottom: 10px;
+}
+
+.similar-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.similar-card {
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 10px;
+  text-align: center;
+}
+
+.similar-card img {
+  height: 150px;
+  object-fit: contain;
+}
+
+.product-title {
+  font-size: 13px;
+  margin: 8px 0 4px;
+}
+
+.price {
+  font-weight: 600;
+  color: #388e3c;
+}
+
+.slider-btn {
+  background: #fff;
+  border: 1px solid #ddd;
+  font-size: 22px;
+  padding: 4px 10px;
+  cursor: pointer;
+}

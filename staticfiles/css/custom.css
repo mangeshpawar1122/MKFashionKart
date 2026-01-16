@@ -48,3 +48,90 @@ label:hover ~ input:checked ~ label{
     color: #ffc107;
 
 }
+
+ul.thumb {
+    margin: 0 auto;
+    padding: 0;
+    gap: 10px;
+    float: left;
+}
+
+ul.thumb li {
+    list-style: none;
+    margin: 10px;
+}
+
+ul.thumb li img {
+    width: 80px;
+    height: 80px;
+    border: 1px solid gray;
+   
+}
+
+.similar-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 15px;
+  padding-bottom: 10px;
+}
+
+.similar-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.similar-card {
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 10px;
+  text-align: center;
+}
+
+.similar-card img {
+  height: 150px;
+  object-fit: contain;
+}
+
+.product-title {
+  font-size: 13px;
+  margin: 8px 0 4px;
+}
+
+.price {
+  font-weight: 600;
+  color: #388e3c;
+}
+
+.slider-btn {
+  background: #fff;
+  border: 1px solid #ddd;
+  font-size: 22px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.coupon-card {
+  max-width: 350px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.coupon-card h4 {
+  margin-bottom: 10px;
+}
+
+.coupon-card input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.coupon-card button {
+  width: 100%;
+  padding: 10px;
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

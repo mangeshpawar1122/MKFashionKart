@@ -6,11 +6,16 @@
 <section class="section-intro padding-y-sm">
   <div class="container">
     <div class="intro-banner-wrap">
-      <img src="{% static 'images/banners/cover.jpg' %}" class="img-fluid rounded">
+      <img 
+        id="bannerImage"
+        src="{% static 'images/banners/cover.jpg' %}"
+        class="img-fluid rounded"
+        alt="Banner"
+        style="transition: opacity 0.5s ease;"
+      >
     </div>
   </div>
 </section>
-
 
 
 <!-- PRODUCT SECTION -->
@@ -33,15 +38,69 @@
 			<figcaption class="info-wrap">
 				<a href="{{ product.get_url }}" class="title">{{product.product_name}}</a>
 				<div class="price mt-1">${{product.price}}</div>
+
 			</figcaption>
+			
 		</div>
+		
 	</div>
 	{% endfor %}
 </div>
+<section class="similar-section mt-5">
+  <div class="container">
 
-</div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4>Releted products</h4>
+      <button class="slider-btn" onclick="scrollRight()">›</button>
+    </div>
+
+    <div class="similar-slider" id="similarSlider">
+      {% for product in products %}
+      <div class="similar-card">
+
+        <a href="{{ product.get_url }}">
+          <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
+        </a>
+
+        <p class="product-title">{{ product.product_name|truncatechars:40 }}</p>
+        <p class="price">₹{{ product.price }}</p>
+
+      </div>
+      {% endfor %}
+    </div>
+		
+
+  </div>
 </section>
 
+<script>
+  const banners = [
+    "{% static 'images/banners/cover.jpg' %}",
+    "{% static 'images/banners/1.jpg' %}",
+  ];
+
+  let index = 0;
+  const img = document.getElementById("bannerImage");
+
+  setInterval(() => {
+    img.style.opacity = 0;
+
+    setTimeout(() => {
+      index = (index + 1) % banners.length;
+      img.src = banners[index];
+      img.style.opacity = 1;
+    }, 500);
+
+  }, 3000); // change every 3 seconds
+</script>
+
+
+<script>
+  function scrollRight() {
+    document.getElementById("similarSlider")
+      .scrollBy({ left: 300, behavior: 'smooth' });
+  }
+</script>
 
 </body>
 </html>

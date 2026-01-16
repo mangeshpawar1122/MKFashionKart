@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product,Variation,ReviewRating,ProductGallery
+from .models import Product,Variation,ReviewRating,ProductGallery,ProductType
 import admin_thumbnails
 
 @admin_thumbnails.thumbnail('image')
@@ -34,6 +34,12 @@ class VariationAdmin(admin.ModelAdmin):
         'variation_category',
         'variation_value',
     )
+
+
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    prepopulated_fields = {'slug': ('name',)}
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Variation,VariationAdmin)

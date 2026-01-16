@@ -1,0 +1,5 @@
+<form method="POST" action="{% url 'apply_coupon' %}">
+  {% csrf_token %}
+  <input type="text" name="coupon_code" placeholder="Enter coupon code" required>
+  <button type="submit">Apply Coupon</button>
+</form>

@@ -1,0 +1,39 @@
+<h2>{{ category.category_name }}</h2>
+
+<!-- NEW PRODUCTS -->
+<h3>New Products</h3>
+<div class="row">
+  {% for p in new_products %}
+    <div class="col-md-3">
+      <img src="{{ p.image.url }}" class="img-fluid">
+      <p>{{ p.product_name }}</p>
+      <p>₹{{ p.price }}</p>
+    </div>
+  {% endfor %}
+</div>
+
+<hr>
+
+<!-- ALL PRODUCTS -->
+<h3>All Products</h3>
+<div class="row">
+  {% for p in all_products %}
+    <div class="col-md-2">
+      <img src="{{ p.image.url }}" class="img-fluid">
+      <p>{{ p.product_name }}</p>
+    </div>
+  {% endfor %}
+</div>
+
+<hr>
+
+<!-- SIMILAR PRODUCTS -->
+<h3>Similar Products</h3>
+<div class="row">
+  {% for p in similar_products %}
+    <div class="col-md-2">
+      <img src="{{ p.image.url }}" class="img-fluid">
+      <p>{{ p.product_name }}</p>
+    </div>
+  {% endfor %}
+</div>

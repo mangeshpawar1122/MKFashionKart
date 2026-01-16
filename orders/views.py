@@ -208,4 +208,4 @@ def damy_payment(request):
 from django.shortcuts import render
 
 def damy_payment_success(request):
-    return render(request,'orders/order_complete.html')
+    return render(request,'damy_payment_success.html')

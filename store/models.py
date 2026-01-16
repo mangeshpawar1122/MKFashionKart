@@ -5,6 +5,13 @@ from accounts.models import Account
 from django.db.models import Avg,Count
 # Create your models here.
 
+
+class ProductType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True)
+
+    def __str__(self):
+        return self.name
 class Product(models.Model):
   product_name = models.CharField(max_length=200,unique=True)
   slug         = models.SlugField(max_length=200,unique=True)
@@ -107,3 +114,4 @@ class ProductGallery(models.Model):
    class Meta:
       verbose_name='productgallery'
       verbose_name_plural='product gallery'
+
